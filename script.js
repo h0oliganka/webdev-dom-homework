@@ -166,6 +166,3 @@ fetchPromise.then((response) => {
     renderComments();
   });
 });
-
-
-
