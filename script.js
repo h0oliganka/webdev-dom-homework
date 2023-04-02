@@ -156,7 +156,7 @@ fetchPromise.then((response) => {
   jsonPromise.then((responseData) => {
     const appComments = responseData.comments.map((comment) => {
       return {
-        name: comment.author.name,
+        name: comment.autoname,
         date: new Date(comment.date),
         text: comment.text,
         likesCounter: comment.likesCounter,
