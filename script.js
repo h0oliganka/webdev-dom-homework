@@ -106,15 +106,20 @@ buttonElement.addEventListener("click", () => {
     return;
   }
 
+// POST
   fetch('https://webdev-hw-api.vercel.app/api/v1/dasha-salova/comments', {
     method: "POST",
     body: JSON.stringify({
+      name: nameInputElement.value,
       text: nameInputElement.value,
+      date: newDate,
+      likesCounter: 0,
     }),
   }).then((response) => {
     response.json().then((responseData) => {
-      commentResponsePost = responseData.comments;
+      comments = responseData.comments;
       renderComments();
+      initEventListeners();
     });
   });
 
@@ -142,11 +147,10 @@ renderComments();
 initEventListeners();
 
 // создаем API(fetch - запускает запрос в api)
+// GET
 const fetchPromise = fetch('https://webdev-hw-api.vercel.app/api/v1/dasha-salova/comments', {
   method: "GET"
 });
-
-console.log(fetchPromise);
 
 fetchPromise.then((response) => {
   console.log(response);
@@ -156,13 +160,16 @@ fetchPromise.then((response) => {
   jsonPromise.then((responseData) => {
     const appComments = responseData.comments.map((comment) => {
       return {
-        name: comment.autoname,
+        name: comment.author.name,
         date: new Date(comment.date),
         text: comment.text,
-        likesCounter: comment.likesCounter,
+        likesCounter: 0,
+        isLiked: comment.isLiked,
       };
     });
     comments = appComments;
     renderComments();
+    initEventListeners();
+    console.log(comments);
   });
 });
