@@ -70,21 +70,16 @@ const renderComments = () => {
 }
 
 // дата и время комментария
-let myDate = new Date();
-const months = ["01", "02", "03", "04", "05", "06",
-  "07", "08", "09", "10", "11", "12"];
-let year = String(myDate.getFullYear()).slice(2);
-let day = myDate.getDate();
-if (day < 10) {
-  day = '0' + day;
-}
-let hour = myDate.getHours();
-if (hour < 10) {
-  hour = '0' + hour;
-}
-let minute = myDate.getMinutes();
-if (minute < 10) {
-  minute = '0' + minute;
+function newDate() {
+  let date = new Date();
+  let monthArray = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
+  let myMinute = String(date.getMinutes()).length < 2 ? '0' + date.getMinutes() : date.getMinutes();
+  let myHours = String(date.getHours()).length < 2 ? '0' + date.getHours() : date.getHours();
+  let myDay = String(date.getDate()).length < 2 ? '0' + date.getDate() : date.getDate();
+  let myMonth = monthArray[+date.getMonth()];
+  let myYear = String(date.getFullYear()).slice(2);
+  let str = myDay + '.' + myMonth + '.' + myYear + '.' + myHours + '.' + myMinute;
+  return str;
 }
 
 
@@ -104,36 +99,6 @@ buttonElement.addEventListener("click", () => {
     return;
   }
 
-  fetch('https://webdev-hw-api.vercel.app/api/v1/dasha-salova/comments', {
-    method: "POST",
-    body: JSON.stringify({
-      text: nameInputElement.value,
-    }),
-  }).then((response) => {
-    response.json().then((responseData) => {
-      commentResponsePost = responseData.comments;
-      renderComments();
-    });
-  });
-
-  renderComments();
-
-  // рендер нового коммента
-  comments.push({
-    name: nameInputElement.value
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;"),
-    date: newDate(),
-    text: commentInputElement.value
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;"),
-    likesCounter: 0,
-  });
-
   // POST
   fetch('https://webdev-hw-api.vercel.app/api/v1/dasha-salova/comments', {
     method: "POST",
@@ -150,13 +115,14 @@ buttonElement.addEventListener("click", () => {
       });
 
       fetchPromise.then((response) => {
+
         const jsonPromise = response.json();
 
         jsonPromise.then((responseData) => {
           const appComments = responseData.comments.map((comment) => {
             return {
               name: comment.author.name,
-              date: newDate(comment.date),
+              date: newDate(),
               text: comment.text,
               likesCounter: 0,
               isLiked: comment.isLiked,
@@ -174,6 +140,24 @@ buttonElement.addEventListener("click", () => {
   });
   renderComments();
   initEventListeners();
+
+  // рендер нового коммента
+  comments.push({
+    name: nameInputElement.value
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;"),
+    date: newDate(),
+    text: commentInputElement.value
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;"),
+    likesCounter: 0,
+  });
+  renderComments();
+  initEventListeners();
 });
 renderComments();
 initEventListeners();
@@ -185,15 +169,14 @@ const fetchPromise = fetch('https://webdev-hw-api.vercel.app/api/v1/dasha-salova
 });
 
 fetchPromise.then((response) => {
-  console.log(response);
 
   const jsonPromise = response.json();
 
   jsonPromise.then((responseData) => {
     const appComments = responseData.comments.map((comment) => {
       return {
-        name: comment.autoname,
-        date: new Date(comment.date),
+        name: comment.author.name,
+        date: newDate(),
         text: comment.text,
         likesCounter: 0,
         isLiked: comment.isLiked,
