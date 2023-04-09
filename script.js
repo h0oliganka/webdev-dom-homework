@@ -3,6 +3,74 @@ const commentsElement = document.getElementById("comments");
 const nameInputElement = document.getElementById("name-input");
 const commentInputElement = document.getElementById("comment-input");
 const likes = document.querySelectorAll('.likes');
+let addForm = document.getElementById("add-form");
+
+// GET
+const fetchAndRenderComments = () => {
+  let commentsLoading = document.createElement('div');
+  commentsLoading.id = 'commentsLoading';
+  commentsLoading.innerHTML = '<p>Комментарии загружается...</p>';
+  commentsElement.parentNode.replaceChild(commentsLoading, commentsElement);
+  return fetch("https://webdev-hw-api.vercel.app/api/v1/alina-pitskhelauri/comments", {
+    method: "GET",
+  }).then((response) => {
+
+
+    const jsonPromise = response.json();
+
+    jsonPromise.then((responseData) => {
+      const appComments = responseData.comments.map((comment) => {
+        return {
+          name: comment.author.name,
+          date: newDate(),
+          text: comment.text,
+          likesCounter: 0,
+
+        }
+
+      })
+      comments = appComments;
+      renderComments();
+      initEventListeners();
+      console.log(comments);
+    });
+
+  }).then(() => {
+    return commentsLoading.parentNode.replaceChild(commentsElement, commentsLoading);
+
+  })
+};
+
+// создаем API(fetch - запускает запрос в api)
+// GET
+const fetchPromise = () => {
+  fetch('https://webdev-hw-api.vercel.app/api/v1/dasha-salova/comments', {
+    method: "GET"
+  })
+    .then((response) => {
+
+      const jsonPromise = response.json();
+
+      jsonPromise.then((responseData) => {
+        const appComments = responseData.comments.map((comment) => {
+          return {
+            name: comment.author.name,
+            date: newDate(),
+            text: comment.text,
+            likesCounter: 0,
+            isLiked: comment.isLiked,
+          };
+        });
+        comments = appComments;
+        renderComments();
+        initEventListeners();
+        console.log(comments);
+      });
+    });
+}
+
+fetchAndRenderComments();
+fetchPromise();
 
 // кнопка лайка и счетчик
 const initEventListeners = () => {
@@ -99,48 +167,6 @@ buttonElement.addEventListener("click", () => {
     return;
   }
 
-  // POST
-  fetch('https://webdev-hw-api.vercel.app/api/v1/dasha-salova/comments', {
-    method: "POST",
-    body: JSON.stringify({
-      name: nameInputElement.value,
-      text: commentInputElement.value,
-      date: newDate(),
-      likesCounter: 0,
-    }),
-  }).then((response) => {
-    response.json().then((responseData) => {
-      const fetchPromise = fetch('https://webdev-hw-api.vercel.app/api/v1/dasha-salova/comments', {
-        method: "GET"
-      });
-
-      fetchPromise.then((response) => {
-
-        const jsonPromise = response.json();
-
-        jsonPromise.then((responseData) => {
-          const appComments = responseData.comments.map((comment) => {
-            return {
-              name: comment.author.name,
-              date: newDate(),
-              text: comment.text,
-              likesCounter: 0,
-              isLiked: comment.isLiked,
-            };
-          });
-          comments = appComments;
-          renderComments();
-          initEventListeners();
-          console.log(comments);
-        });
-      });
-      comments = responseData.comments;
-      initEventListeners();
-    });
-  });
-  renderComments();
-  initEventListeners();
-
   // рендер нового коммента
   comments.push({
     name: nameInputElement.value
@@ -156,35 +182,28 @@ buttonElement.addEventListener("click", () => {
       .replaceAll('"', "&quot;"),
     likesCounter: 0,
   });
-  renderComments();
-  initEventListeners();
+
+  let addFormLoading = document.createElement('div');
+  addFormLoading.id = 'addFormLoading';
+  addFormLoading.innerHTML = '<p>Комментарий загружается...</p>';
+  addForm.parentNode.replaceChild(addFormLoading, addForm);
+
+  // POST
+  fetch('https://webdev-hw-api.vercel.app/api/v1/dasha-salova/comments', {
+    method: "POST",
+    body: JSON.stringify({
+      name: nameInputElement.value,
+      text: commentInputElement.value,
+      date: newDate(),
+      likesCounter: 0,
+    }),
+  }).then((response) => {
+    return response.json();
+  }).then(() => {
+    return fetchPromise();
+  }).then(() => {
+    return addFormLoading.parentNode.replaceChild(addForm, addFormLoading);
+  })
 });
 renderComments();
 initEventListeners();
-
-// создаем API(fetch - запускает запрос в api)
-// GET
-const fetchPromise = fetch('https://webdev-hw-api.vercel.app/api/v1/dasha-salova/comments', {
-  method: "GET"
-});
-
-fetchPromise.then((response) => {
-
-  const jsonPromise = response.json();
-
-  jsonPromise.then((responseData) => {
-    const appComments = responseData.comments.map((comment) => {
-      return {
-        name: comment.author.name,
-        date: newDate(),
-        text: comment.text,
-        likesCounter: 0,
-        isLiked: comment.isLiked,
-      };
-    });
-    comments = appComments;
-    renderComments();
-    initEventListeners();
-    console.log(comments);
-  });
-});
