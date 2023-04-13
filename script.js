@@ -196,14 +196,33 @@ buttonElement.addEventListener("click", () => {
       text: commentInputElement.value,
       date: newDate(),
       likesCounter: 0,
+      forceError: true,
     }),
   }).then((response) => {
-    return response.json();
+    if (response.status === 201) {
+      nameInputElement.value = "";
+      commentInputElement.value = "";
+      return response.json();
+    }
+    if (response.status === 500) {
+      throw new Error('Сервер сломался, попробуй позже');
+    } if (response.status === 400) {
+      alert("Имя и комментарий должны быть не короче 3 символов");
+
+    }
   }).then(() => {
     return fetchPromise();
+
   }).then(() => {
     return addFormLoading.parentNode.replaceChild(addForm, addFormLoading);
-  })
+
+  }).catch((error) => {
+    addFormLoading.parentNode.replaceChild(addForm, addFormLoading);
+    alert('Ошибка интернет соединения');
+    console.warn(error);
+  });
+  renderComments();
+  initEventListeners();
 });
 renderComments();
 initEventListeners();
