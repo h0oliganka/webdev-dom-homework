@@ -1,12 +1,12 @@
-import { comments } from "./script.js";
 import { initEventListeners } from "./script.js";
+import { comments } from "./script.js";
 
 const commentsElement = document.getElementById("comments");
 
 // рендер функция
 export const renderComments = () => {
-    const commentsHtml = comments.map((comment) => {
-      return `<li class="comment" data-text="${comment.text}" data-name="${comment.name}">
+  const commentsHtml = comments.map((comment) => {
+    return `<li class="comment" data-text="${comment.text}" data-name="${comment.name}">
         <div class="comment-header">
           <div >${comment.name}</div>
           <div>${comment.date}</div>
@@ -23,7 +23,7 @@ export const renderComments = () => {
           </div>
         </div>
       </li>`;
-    }).join('');
-    initEventListeners();
-    commentsElement.innerHTML = commentsHtml;
+  }).join('');
+  initEventListeners();
+  commentsElement.innerHTML = commentsHtml;
 }
