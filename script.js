@@ -109,30 +109,30 @@ buttonElement.addEventListener("click", () => {
       .replaceAll('"', "&quot;"),
     likesCounter: 0,
   });
-  let addFormLoading = document.createElement('div');
-  addFormLoading.id = 'addFormLoading';
-  addFormLoading.innerHTML = '<p>Комментарий загружается...</p>';
-  addForm.parentNode.replaceChild(addFormLoading, addForm);
+  // let addFormLoading = document.createElement('div');
+  // addFormLoading.id = 'addFormLoading';
+  // addFormLoading.innerHTML = '<p>Комментарий загружается...</p>';
+  addForm.parentNode.appendChild(addFormLoading, addForm);
 
   // POST
   const postAndRenderComments = () => {
-    let addFormLoading = document.createElement('div');
-    addFormLoading.id = 'addFormLoading';
-    addFormLoading.innerHTML = '<p>Комментарий загружается...</p>';
-    addForm.parentNode.replaceChild(addFormLoading, addForm);
+    // let addFormLoading = document.createElement('div');
+    // addFormLoading.id = 'addFormLoading';
+    // addFormLoading.innerHTML = '<p>Комментарий загружается...</p>';
+    addForm.parentNode.appendChild(addFormLoading, addForm);
 
     return postComments({ nameInputElement, commentInputElement })
       .then(() => {
-        return addFormLoading.parentNode.replaceChild(addForm, addFormLoading);
+        return addFormLoading.parentNode.appendChild(addForm, addFormLoading);
       })
       .then(() => {
-        return fetchPromise();
+        return fetchAndRenderCommentsTwo();
 
       }).then(() => {
-        return addFormLoading.parentNode.replaceChild(addForm, addFormLoading);
+        return addFormLoading.parentNode.appendChild(addForm, addFormLoading);
 
       }).catch((error) => {
-        addFormLoading.parentNode.replaceChild(addForm, addFormLoading);
+        addFormLoading.parentNode.appendChild(addForm, addFormLoading);
         alert('Ошибка интернет соединения');
         console.warn(error);
       });
