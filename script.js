@@ -51,7 +51,7 @@ export const initEventListeners = () => {
 }
 
 // массив объектов
-export let comments = [{
+window.comments = [{
   name: 'Глеб Фокин',
   date: '12.02.22 12:18',
   text: 'Это будет первый комментарий на этой странице',
@@ -109,16 +109,10 @@ buttonElement.addEventListener("click", () => {
       .replaceAll('"', "&quot;"),
     likesCounter: 0,
   });
-  // let addFormLoading = document.createElement('div');
-  // addFormLoading.id = 'addFormLoading';
-  // addFormLoading.innerHTML = '<p>Комментарий загружается...</p>';
   addForm.parentNode.appendChild(addFormLoading, addForm);
 
   // POST
   const postAndRenderComments = () => {
-    // let addFormLoading = document.createElement('div');
-    // addFormLoading.id = 'addFormLoading';
-    // addFormLoading.innerHTML = '<p>Комментарий загружается...</p>';
     addForm.parentNode.appendChild(addFormLoading, addForm);
 
     return postComments({ nameInputElement, commentInputElement })

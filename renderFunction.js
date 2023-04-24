@@ -1,5 +1,4 @@
 import { initEventListeners } from "./script.js";
-import { comments } from "./script.js";
 
 const commentsElement = document.getElementById("comments");
 

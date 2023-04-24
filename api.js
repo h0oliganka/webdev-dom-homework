@@ -23,7 +23,7 @@ export function getCommentsLoading(comments) {
         }
 
       })
-      comments = appComments;
+      window.comments = appComments;
       renderComments();
       initEventListeners();
       console.log(comments);
@@ -60,7 +60,7 @@ export function getComments(comments) {
       comments = appComments;
       renderComments();
       initEventListeners();
-      console.log(comments);
+      console.log(window.comments);
     });
 
   })
